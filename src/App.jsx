@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useRef} from "react"
 
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
   const [numberAllowed, setNumberAllowed] = useState(false)
   const [charAllowed, setCharAllowed] = useState(false)
   const [password, setPassword] = useState('')
+  let passwordRef = useRef(null)
 
   const passwordGenerator = useCallback(() => {
       let pass = ''
@@ -26,7 +27,15 @@ function App() {
 
   useEffect((params) => {
     passwordGenerator()
-  },[length, numberAllowed, charAllowed]
+  },[length, numberAllowed, charAllowed])
+
+
+
+  const copyToClipbord = useCallback(() => {
+    passwordRef.current.select();
+    passwordRef.current.setSelectioRange(0,3);
+    window.navigator.clipboard.writeText(password)
+  },[password]
   )
 
 
@@ -43,7 +52,10 @@ function App() {
           value={password}
           className="p-3 rounded-s-full"
           />
-          <button className="bg-blue-600 text-white p-3 rounded-e-full">Copy</button>
+          <button 
+          className="bg-blue-600 text-white p-3 rounded-e-full"
+          onClick={()=>copyToClipbord()}
+          >Copy</button>
       </div>
       <div className="flex justify-center items-center gap-5 w-full">
 
